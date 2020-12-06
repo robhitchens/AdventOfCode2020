@@ -68,14 +68,20 @@ Day1 >> expenseReport: anObject [
 	expenseReport := anObject
 ]
 
+{ #category : #'as yet unclassified' }
+Day1 >> findAnswerIn: aCollectionOfPair [ 
+	"Returns self with first and second answers populated. Returns Nil if an answer is not found."
+	(self getMatchingCompliment: aCollectionOfPair)
+	ifNotNil: [ :element |
+		^self first: (element key); second: (element value) ]
+	ifNil: [ ^nil ]
+]
+
 { #category : #accessing }
 Day1 >> findSum2020 [
 	| compliments |
-	compliments := expenseReport
-		collect: [ :element | element -> (self getComplimentOf: element) ].
-	(self getMatchingCompliment: compliments) ifNotNil: [ :element | 
-			^self first: (element key); second: (element value); yourself ].
-	^nil
+	compliments := self transformToComplimentPairs: expenseReport.
+	^self findAnswerIn: compliments.
 ]
 
 { #category : #accessing }
@@ -95,16 +101,20 @@ Day1 >> getComplimentOf: aNumber [
 
 { #category : #'as yet unclassified' }
 Day1 >> getMatchingCompliment: aCollectionOfAssociations [
-	"TODO looks like I need a little bit more work on understanding collections in pharo"
-	aCollectionOfAssociations do: [ :pair |
-		((aCollectionOfAssociations indexOf: (pair value -> pair key)) ~= 0)
-		ifTrue: [ ^ pair ] ].
-	^ nil
+	aCollectionOfAssociations detect: [ :pair |
+		((aCollectionOfAssociations indexOf: (pair value -> pair key)) ~= 0) ] 
+	ifFound: [ :found | ^ found ]
+	ifNone: [ ^ nil ]
 ]
 
 { #category : #'as yet unclassified' }
 Day1 >> getProductOfFirstAndSecond [
 	^ (self first * self second)
+]
+
+{ #category : #'as yet unclassified' }
+Day1 >> getSolution [
+	^ self findSum2020; getProductOfFirstAndSecond
 ]
 
 { #category : #accessing }
@@ -115,4 +125,9 @@ Day1 >> second [
 { #category : #accessing }
 Day1 >> second: anObject [
 	second := anObject
+]
+
+{ #category : #'as yet unclassified' }
+Day1 >> transformToComplimentPairs: aCollection [
+	^ aCollection collect: [ :element | element -> (self getComplimentOf: element) ]
 ]
