@@ -16,17 +16,6 @@ Day1Test >> setUp [
 ]
 
 { #category : #tests }
-Day1Test >> testCheckComplimentForAtWith [
-	| compliments |
-	compliments := #(299 1041 1654 1721 1345 564).
-	day1 checkComplimentFor: 1721 at: 1 with: compliments.
-	self assert: (day1 first) isNotNil;
-		  assert: (day1 first) equals: 1721;
-		  assert: (day1 second) isNotNil;
-		  assert: (day1 second) equals: 299
-]
-
-{ #category : #tests }
 Day1Test >> testDay1Problem [
 	| expectedValue actualValue |
 	expectedValue := 514579.
@@ -45,13 +34,11 @@ Day1Test >> testFindSum2020 [
 ]
 
 { #category : #tests }
-Day1Test >> testGetComplimentsForExpenseReport [
-	| expectedCompliments actualCompliments |
-	expectedCompliments := #(299 1041 1654 1721 1345 564).
-	actualCompliments := day1 getComplimentsForExpenseReport.
-	self 
-		assert: actualCompliments isNotNil;
-		assert: actualCompliments equals: expectedCompliments.
+Day1Test >> testGetMatchingCompliment [
+	| result pairs |
+	pairs := { 1721 -> 299 . 979 -> 1041 . 366 -> 1654 . 299 -> 1721 . 675 -> 1345 . 1456 -> 564 }.
+	result := day1 getMatchingCompliment: pairs.
+	self assert: result equals: (1721 -> 299)
 ]
 
 { #category : #tests }

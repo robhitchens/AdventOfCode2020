@@ -1,6 +1,9 @@
 "
 This is a class for my attempt at the first advent of code 2020 problem.
 
+TODO: improvements could iterate over and create compliment pairs then next stage of pipeline would perform check?
+could create compliment pair collections, sort each collection and reduce to the duplicate.
+
 snippet from advent of code 2020: 
 
 --- Day 1: Report Repair ---
@@ -55,20 +58,6 @@ Day1 class >> withExpenseReport: expenseReport [
 	^ self new expenseReport: expenseReport 
 ]
 
-{ #category : #'as yet unclassified' }
-Day1 >> checkComplimentFor: element at: index with: compliments [
-	| complimentValue complimentAbs expectedTotal |
-	expectedTotal := self class expectedTotal.
-	complimentValue := (compliments at: index).
-	complimentAbs := (complimentValue abs).
-	((complimentAbs + element) = expectedTotal)
-	ifTrue: [ 
-		self first: element.
-		self second: complimentValue.
-		^ self ]
-	ifFalse: [ ^ nil ]
-]
-
 { #category : #accessing }
 Day1 >> expenseReport [
 	^ expenseReport
@@ -79,13 +68,14 @@ Day1 >> expenseReport: anObject [
 	expenseReport := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 Day1 >> findSum2020 [
 	| compliments |
-	compliments := self getComplimentsForExpenseReport.
-	expenseReport doWithIndex: [ :element :i | 
-		(self checkComplimentFor: element at: i with: compliments) ifNotNil: [ ^ self ] ].
-	^ nil.
+	compliments := expenseReport
+		collect: [ :element | element -> (self getComplimentOf: element) ].
+	(self getMatchingCompliment: compliments) ifNotNil: [ :element | 
+			^self first: (element key); second: (element value); yourself ].
+	^nil
 ]
 
 { #category : #accessing }
@@ -99,8 +89,17 @@ Day1 >> first: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-Day1 >> getComplimentsForExpenseReport [
-	^ expenseReport collect: [ :element | (self class expectedTotal) - element].
+Day1 >> getComplimentOf: aNumber [
+	^ (self class expectedTotal) - aNumber
+]
+
+{ #category : #'as yet unclassified' }
+Day1 >> getMatchingCompliment: aCollectionOfAssociations [
+	"TODO looks like I need a little bit more work on understanding collections in pharo"
+	aCollectionOfAssociations do: [ :pair |
+		((aCollectionOfAssociations indexOf: (pair value -> pair key)) ~= 0)
+		ifTrue: [ ^ pair ] ].
+	^ nil
 ]
 
 { #category : #'as yet unclassified' }
