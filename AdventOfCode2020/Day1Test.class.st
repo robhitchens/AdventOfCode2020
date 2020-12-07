@@ -16,7 +16,7 @@ Day1Test >> setUp [
 ]
 
 { #category : #tests }
-Day1Test >> testFindAnswersIn [
+Day1Test >> testFindAnswerIn [
 	| expectedFirst expectedSecond |
 	expectedFirst := 1721.
 	expectedSecond := 299.
